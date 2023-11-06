@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="ListDailyPanel" type="list" list-name="listIt"  separate-columns="true" target="" paginate-target="books"
+          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Book"/>
+                <field-map field-name="orderBy" from-field="date DESC|createDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="Id" widget-style="buttontext" entry-name="bookId" parameter-name="bookId">
+            <hyperlink description="${bookId}" target="viewBook"  link-type="layered-modal"  >
+                <parameter param-name="bookId" from-field="bookId"/>
+            </hyperlink>
+        </field>
+        <field name="title" title="${uiLabelMap.BookTitle}" entry-name="title" parameter-name="title"><display/></field>
+        <field name="stock" entry-name="stock" parameter-name="stock"><display/></field>
+        <field name="status"    entry-name="status" parameter-name="status"><display/></field>
+        <field name="title" entry-name="title" parameter-name="title"><display/></field>
+        <field name="updateDate" entry-name="updateDate" > <display/></field>
+
+        <field name="deleteAct" title="操作" widget-style="buttontext" >
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteBook">
+                <parameter param-name="bookId" from-field="${bookId}"/>
+            </hyperlink>
+        </field>
+        <field name="updateAct"  title="操作" widget-style="buttontext">
+            <hyperlink description="编辑" target="editBook">
+                <parameter param-name="bookId" from-field="${bookId}"/>
+            </hyperlink>
+        </field>
+
+    </form>
+
+    <form name="SearchForm" target="books" title="" type="single"
+          header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="bookId"><text/></field>
+        <field name="title"><text-find ignore-case="true"/></field>
+        <field name="desc"><text-find ignore-case="true"/></field>
+
+        <field name="stock" ><text/></field>
+        <field name="status">
+            <drop-down allow-empty="true">
+                <option key="1" description="${uiLabelMap.CommonY}"/>
+                <option key="0" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="localeString">
+            <lookup target-form-name="LookupLocale"></lookup>
+        </field>
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="AddBookForm" type="single" target="submitBook" title="" default-map-name="book"
+          header-row-style="header-row" default-table-style="basic-table">
+        <field name="title"  title="${uiLabelMap.BookTitle}" parameter-name="title" required-field="true"><text/></field>
+        <field name="html" parameter-name="html">
+            <textarea rows="10" default-value="This is a disabled text area field"/>
+        </field>
+        <field name="stock" parameter-name="stock"><text/></field>
+        <field name="status" parameter-name="status">
+            <drop-down allow-empty="false"> <!-- allow-empty="false" is also the default value, so you can also not specify this attribute here -->
+                <option key="1" description="${uiLabelMap.CommonY}"/>
+                <option key="0" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" required-field="true">
+            <drop-down no-current-selected-key="USA">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="updateDate" parameter-name="updateDate">
+            <date-time default-value="${nowTimestamp}"/>
+        </field>
+        <field name="bookId"><hidden value="0"/></field>
+        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+
+        <!--实体类测试
+        <field name="ofbizDemoTypeId" title="字段一">
+            <drop-down allow-empty="true" current-description="">
+                 We have made this drop down options dynamic(Values from db) using this
+                <entity-options description="${contentName}" key-field-name="contentName" entity-name="Content">
+                    <entity-order-by field-name="contentName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        -->
+    </form>
+
+    <form name="bookDetailForm" type="single"  default-map-name="oneBook"
+          header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="title"  title="${uiLabelMap.BookTitle}" parameter-name="title" required-field="true">
+            <display/>
+        </field>
+        <field name="html" parameter-name="html">
+            <display/>
+        </field>
+        <field name="stock" parameter-name="stock"><text/></field>
+        <field name="status" parameter-name="status">
+            <drop-down allow-empty="false"> <!-- allow-empty="false" is also the default value, so you can also not specify this attribute here -->
+                <option key="1" description="${uiLabelMap.CommonY}"/>
+                <option key="0" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="updateDate" parameter-name="updateDate">
+            <display/>
+        </field>
+
+    </form>
+</forms>

@@ -1,0 +1,32 @@
+##开发配置
+ ofbiz-node-conventions.gradle 配置node的版本
+
+##数据库配置
+加驱动build.gradle
+runtime 'mysql:mysql-connector-java:8.0.30'
+ Modify the entityengine.xml file located in
+$OFBIZ_HOME/framework/entity/config
+
+启动
+gradlew cleanAll loadAll
+
+gradlew ofbiz start
+
+#访问地址入口
+https://localhost:8443/ordermgr[Order Back Office interface]
+
+https://localhost:8443/accounting[Accounting Back Office interface]
+
+https://localhost:8443/webtools[Administrator interface]
+
+admin ofbiz
+
+打包
+`gradlew distTar`
+or as a `zip` archive
+`gradlew distZip`
+
+##创建新plugin
+gradle createPlugin -PpluginId=dailyBook -PpluginResourceName=DailyBook -PwebappName=dailybook -PbasePermission=DailyBook_pem
+
+##切换语言

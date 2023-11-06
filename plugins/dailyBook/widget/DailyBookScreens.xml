@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="DailyBookCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <label style="h3">新增模式</label>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="DailyBook_pem" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.Search}">
+                                    <include-form name="SearchForm" location="component://dailyBook/widget/DailyBookForms.xml"/>
+                                </screenlet>
+                                <container style="button-bar">
+                                    <link  text="${uiLabelMap.CommonCreate}" target="addBook"   link-type="layered-modal"  style="buttontext create"/>
+                                </container>
+                                <platform-specific>
+                                    <html><html-template multi-block="true" location="component://common-theme/template/includes/SetMultipleSelectJsList.ftl"/></html>
+                                </platform-specific>
+
+                                <include-form name="ListDailyPanel" location="component://dailyBook/widget/DailyBookForms.xml"/>
+
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">出现错误了</label>
+                            </fail-widgets>
+                        </section>
+
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="test01Page">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="书店测试title"/>
+                <set field="exampleCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DailyBookCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                <section>
+                    <condition>
+                        <if-has-permission permission="DailyBook_pem" action="_VIEW"/>
+                    </condition>
+                    <widgets>
+                        <label style="h3">test01Page</label>
+                        <include-form name="ListDailyPanel" location="component://dailyBook/widget/DailyBookForms.xml"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="h3">出现错误了</label>
+                    </fail-widgets>
+                </section>
+                </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="BookDetailPage">
+        <section>
+            <actions>
+                <set field="exampleCtx" from-field="parameters"/>
+                <set field="bookId" from-field="parameters.bookId" default-value="${bookId}"/>
+
+                <entity-one entity-name="Book" value-field="oneBook">
+                    <field-map field-name="bookId" from-field="parameters.bookId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <section>
+                    <widgets>
+                        <label style="h3">I am here detail</label>
+                        <include-form name="bookDetailForm" location="component://dailyBook/widget/DailyBookForms.xml"/>
+
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://example/template/bookTest.ftl"/>
+                            </html>
+                        </platform-specific>
+
+                    </widgets>
+                    <fail-widgets>
+                        <label style="h3">出现错误了</label>
+                    </fail-widgets>
+                </section>
+
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="BookEditPage">
+        <section>
+            <actions>
+                <set field="exampleCtx" from-field="parameters"/>
+                <set field="bookId" from-field="parameters.bookId" default-value="${bookId}"/>
+
+                <entity-one entity-name="Book" value-field="oneBook">
+                    <field-map field-name="bookId" from-field="parameters.bookId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+
+                <decorator-screen name="DailyBookCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <label style="h3">编辑模式</label>
+                                <include-form name="AddBookForm" location="component://dailyBook/widget/DailyBookForms.xml"/>
+
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://example/template/bookTest.ftl"/>
+                                    </html>
+                                </platform-specific>
+
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">出现错误了</label>
+                            </fail-widgets>
+
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="BookAddPage">
+        <section>
+            <actions>
+                <property-map resource="BookUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="exampleCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                    </condition>
+                    <widgets>
+                        <label style="h3">新增模式</label>
+                        <include-form name="AddBookForm" location="component://dailyBook/widget/DailyBookForms.xml"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="h3">出现错误了</label>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

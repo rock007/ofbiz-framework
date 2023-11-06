@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+    <description>DailyBook Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service>
+
+    <!-- Permission Services -->
+    <service name="exampleGenericPermission" engine="simple"
+             location="component://example/minilang/ExamplePermissionServices.xml" invoke="exampleGenericPermission">
+        <implements service="permissionInterface"/>
+    </service>
+
+    <service name="submitBook" default-entity-name="Book" engine="entity-auto" invoke="create" auth="true"   export="true" action="POST">
+        <description>新增或更新book</description>
+        <permission-service service-name="genericContentPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+
+        <override name="title" optional="false"/>
+        <override name="html" optional="false"/>
+        <override name="stock" optional="false"/>
+        <override name="status" optional="false"/>
+        <override name="updateDate" optional="true"/>
+    </service>
+
+    <service name="removeBookById" engine="entity-auto" default-entity-name="Book" auth="true" invoke="delete">
+        <description>Remove Book Entity</description>
+        <permission-service service-name="genericContentPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+</services>

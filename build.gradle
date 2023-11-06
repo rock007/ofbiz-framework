@@ -142,6 +142,7 @@ defaultTasks 'jar', 'test'
 allprojects {
     repositories {
         mavenCentral()
+        maven { name "Alibaba" ; url "https://maven.aliyun.com/repository/public" }
         // the switch from jCenter to mavenCentral needs some additional repositories to be configured here
         // this should be checked frequently to remove obsolete configurations if the artifacts are available
         // on mavenCentral directly
@@ -300,6 +301,9 @@ dependencies {
 
     junitReport 'junit:junit:4.13.2'
     junitReport 'org.apache.ant:ant-junit:1.10.14'
+
+    //加数据库驱动mysql
+    implementation 'mysql:mysql-connector-java:8.0.30'
 
     // Libraries downloaded manually
     implementation fileTree(dir: file("${rootDir}/lib"), include: '**/*.jar')
