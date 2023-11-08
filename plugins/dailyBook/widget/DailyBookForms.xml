@@ -56,7 +56,7 @@ under the License.
 
     </form>
 
-    <form name="SearchForm" target="books" title="" type="single"
+    <form name="SearchForm" target="main" title="" type="single"
           header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="bookId"><text/></field>
